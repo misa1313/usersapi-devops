@@ -69,6 +69,14 @@ jobs:
       # The default PostgreSQL port
         POSTGRES_PORT: 5432
 
+    - name: Run Bandit security scanner
+      run: bandit -r.-f sarif -o bandit-report.sarif
+    
+    - name: Upload Bandit scan results to Github Code Scanning
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: bandit-report.sarif
+          
   docker-build:
     needs: lint-and-test
     runs-on: ubuntu-latest
