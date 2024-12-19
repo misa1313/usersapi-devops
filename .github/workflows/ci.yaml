@@ -114,7 +114,23 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: grype-report.sarif
-    
+  
+  scan-helm:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: kubescape/github-action@main
+      continue-on-error: true
+      with:
+        format: sarif
+        outputFile: kubescape-report
+        files: "chart/"
+
+    - name: Upload scan results to Github Code Scanning
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: kubescape-report.sarif   
   # Optional: Deploy to container registry
   # Uncomment and configure as needed
   # deploy:
