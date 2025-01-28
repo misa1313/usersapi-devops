@@ -1,1 +1,23 @@
-__pycache__/
+.env
+.venv
+todo_list
+*__pycache__/
+.idea
+
+
+# Ansible files
+*inventory
+*ansible_key
+
+
+# Terraform files
+*.tfvars
+*.tfstate*
+**.terraform
+*.terraform.lock.hcl
+*.terraformrc
+*terraform.rc
+crash.log
+crash.*.log
+*.terraform.tfstate.lock.info
+
