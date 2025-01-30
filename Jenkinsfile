@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-        stage('Upload Bandit Report') {
+        stage('Results of Bandit Report') {
             when {
                 expression { env.BANDIT_FAIL == "true" }
             }
@@ -74,7 +74,7 @@ pipeline {
             }
         }
 
-        stage('Upload Grype Report') {
+        stage('Results of Grype Report') {
             when {
                 expression { env.GRYPE_FAIL == "true" }
             }
