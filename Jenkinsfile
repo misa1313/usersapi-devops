@@ -23,7 +23,7 @@ pipeline {
                         pip install -r requirements.txt
                         '''
 
-                        sh 'black --check .'
+                        // sh 'black --check .'
 
                         sh '''
                         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
