@@ -14,11 +14,24 @@
         update_cache: yes
         upgrade: full
 
-    - name: Install git and python
+    - name: Install prerequisite package
       apt:
-        name:
-          - git
-          - python3
+        name: software-properties-common
+        state: present
+
+    - name: Add deadsnakes PPA
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: present
+        update_cache: yes
+
+    - name: Install Python 3.9 and git
+      apt:
+        name: 
+          - python3.9
+          - python3.9-venv
+          - python3.9-dev
+          - git  
         state: present
 
     - name: Include roles for installing docker, jenkins and grype
