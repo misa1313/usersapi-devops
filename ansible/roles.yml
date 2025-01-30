@@ -1,0 +1,12 @@
+- name: Install Jenkins
+  include_role:
+    name: jenkins_install
+
+- name: Install Docker
+  include_role:
+    name: geerlingguy.docker
+
+- name: Install Grype
+  include_role:
+    name: darkwizard242.grype
+

@@ -1,0 +1,30 @@
+    - name: Installing Java
+      apt:
+        name: 
+          - fontconfig 
+          - openjdk-17-jre
+        state: present
+        update_cache: true
+
+    - name: Adding Jenkins repository key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        state: present
+
+    - name: Adding Jenkins repository
+      apt_repository:
+        repo: deb https://pkg.jenkins.io/debian-stable binary/
+        state: present
+
+    - name: Installing Jenkins
+      apt:
+        name: jenkins
+        state: present
+        update_cache: true
+
+    - name: Starting and enabling Jenkins
+      service:
+        name: jenkins
+        state: started
+        enabled: true
+
