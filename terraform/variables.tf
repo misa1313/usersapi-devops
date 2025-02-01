@@ -9,13 +9,17 @@ variable "instance_type" {
 }
 
 variable "vpc_cidr_block" {
-  type = string
   description = "The CIDR block for the VPC."
+  type = string
 }
 
 variable "subnet_cidr_block" {
+  description =  "The CIDR block for the subnet."
   type = string
-  description = "The CIDR block for the subnet."
 }
 
-
+variable "ssh_key_file" {
+  description = "Path to the private SSH key"
+  type        = string
+  default     = "~/.ssh/id_rsa"
+}

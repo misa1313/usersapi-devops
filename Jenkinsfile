@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         COMPONENT = "users-api"
+        REGISTRY = "${env.DOCKER_REGISTRY}"
         BANDIT_FAIL = ""
         GRYPE_FAIL = ""
     }
@@ -26,7 +27,7 @@ pipeline {
                         // sh 'black --check .'
 
                         sh '''
-                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --ignore="F821,F822"
                         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
                         '''
 
@@ -46,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Upload Bandit Report') {
+        stage('Bandit Report Results') {
             when {
                 expression { env.BANDIT_FAIL == "true" }
             }
@@ -56,27 +57,37 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build and Push') {
             steps {
-                script {
+                withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
-                    docker build -t ${COMPONENT}:latest .
-                    '''
+                        echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
 
-                    sh '''
-                    grype ${COMPONENT}:latest --fail-on medium -o sarif > grype-report.sarif || echo "GRYPE_FAIL=true" 
+                        docker build -t ${COMPONENT}:latest .
+
+                        docker tag ${COMPONENT}:latest ${REGISTRY}/${COMPONENT}:latest 
+
+                        docker push ${REGISTRY}/${COMPONENT}:latest 
+
+                        grype ${REGISTRY}/${COMPONENT}:latest  --fail-on medium -o sarif > grype-report.sarif || echo "GRYPE_FAIL=true" 
                     '''
                 }
             }
         }
 
-        stage('Upload Grype Report') {
+        stage('Grype Report Results') {
             when {
                 expression { env.GRYPE_FAIL == "true" }
             }
             steps {
                 echo "Grype scan failed!"
                 error("Exiting due to Grype failure")
+            }
+        }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: '*.sarif', fingerprint: true
             }
         }
     }

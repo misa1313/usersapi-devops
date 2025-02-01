@@ -18,6 +18,9 @@ resource "aws_instance" "jenkins_server" {
     network_interface_id = aws_network_interface.net-interface.id
     device_index         = 0
   }
+  root_block_device {
+    volume_size           = 20         
+  }
   tags = {
     Name = "jenkins-terraform"
     environment = "dev"
