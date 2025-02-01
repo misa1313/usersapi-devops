@@ -4,8 +4,11 @@ pipeline {
     environment {
         COMPONENT = "users-api"
         REGISTRY = "${env.DOCKER_REGISTRY}"
+        CLUSTER_NAME = "${env.EKS_CLUSTER_NAME}"
+        AWS_REGION = "${env.GLOBAL_AWS_REGION}"
         BANDIT_FAIL = ""
         GRYPE_FAIL = ""
+        NAMESPACE = "default"
     }
 
     stages {
@@ -109,7 +112,17 @@ pipeline {
         stage('Deploy Helm Chart') {
             steps {
                 script {
-                    sh "helm upgrade --install ${COMPONENT} ./chart -n ${NAMESPACE} -f ./chart/values.yaml" 
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-creds',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        sh '''
+                            helm dependency build ./chart
+                            helm upgrade --install ${COMPONENT} ./chart -n ${NAMESPACE} -f ./chart/values.yaml 
+                        '''
+                    }
                 }
             }
         }
