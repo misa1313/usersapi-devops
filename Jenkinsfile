@@ -119,6 +119,7 @@ pipeline {
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                     ]]) {
                         sh '''
+                            helm repo add bitnami2 https://charts.bitnami.com/bitnami
                             helm dependency build ./chart
                             helm upgrade --install ${COMPONENT} ./chart -n ${NAMESPACE} -f ./chart/values.yaml 
                         '''
