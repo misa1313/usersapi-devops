@@ -25,7 +25,13 @@
         state: present
         update_cache: yes
 
-    - name: Install Python 3.9 and git
+    - name: Add Kubescape PPA
+      apt_repository:
+        repo: ppa:kubescape/kubescape
+        state: present
+        update_cache: yes
+
+    - name: Install required components
       apt:
         name: 
           - python3.9
@@ -33,6 +39,7 @@
           - python3.9-dev
           - git  
           - unzip
+          - kubescape
         state: present
 
     - name: Include roles for installing docker, jenkins and grype
@@ -56,5 +63,6 @@
         dest: /tmp
         remote_src: true
 
-    - name: Install awscli package.
-      shell: /tmp/aws/install
+    - name: Install AWS-CLI Package
+      shell: /tmp/aws/install --update
+

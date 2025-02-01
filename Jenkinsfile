@@ -88,12 +88,6 @@ pipeline {
             }
         }
 
-        stage('Archive Reports') {
-            steps {
-                archiveArtifacts artifacts: '*.sarif', fingerprint: true
-            }
-        }
-
         stage('AWS Authentication & Update Kubeconfig') {
             steps {
                 script {
@@ -121,10 +115,17 @@ pipeline {
                         sh '''
                             helm repo add bitnami2 https://charts.bitnami.com/bitnami
                             helm dependency build ./chart
+                            kubescape scan ./chart --format sarif --output kubescape-report.sarif
                             helm upgrade --install ${COMPONENT} ./chart -n ${NAMESPACE} -f ./chart/values.yaml 
                         '''
                     }
                 }
+            }
+        }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: '*.sarif', fingerprint: true
             }
         }
 
