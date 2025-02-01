@@ -1,5 +1,8 @@
 - name: geerlingguy.docker
   src: https://github.com/geerlingguy/ansible-role-docker
 
-- name:  darkwizard242.grype
+- name: darkwizard242.grype
   src: https://github.com/darkwizard242/ansible-role-grype
+
+- name: andrewrothstein.kubectl
+  src: https://github.com/andrewrothstein/ansible-kubectl

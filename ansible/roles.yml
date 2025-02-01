@@ -10,3 +10,6 @@
   include_role:
     name: darkwizard242.grype
 
+- name: Install kubectl
+  include_role:
+    name: andrewrothstein.kubectl

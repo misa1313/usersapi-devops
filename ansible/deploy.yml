@@ -32,8 +32,29 @@
           - python3.9-venv
           - python3.9-dev
           - git  
+          - unzip
         state: present
 
     - name: Include roles for installing docker, jenkins and grype
       import_tasks: roles.yml
 
+    - name: Install Helm
+      unarchive:
+        src: https://get.helm.sh/helm-v3.17.0-linux-amd64.tar.gz
+        dest: /usr/local/bin
+        extra_opts: "--strip-components=1"
+        owner: root
+        group: root
+        mode: 0755
+        remote_src: true
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Download AWS-CLI
+      unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp
+        remote_src: true
+
+    - name: Install awscli package.
+      shell: /tmp/aws/install

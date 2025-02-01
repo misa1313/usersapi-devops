@@ -90,6 +90,30 @@ pipeline {
                 archiveArtifacts artifacts: '*.sarif', fingerprint: true
             }
         }
+
+        stage('AWS Authentication & Update Kubeconfig') {
+            steps {
+                script {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-creds',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        sh "aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Helm Chart') {
+            steps {
+                script {
+                    sh "helm upgrade --install ${COMPONENT} ./chart -n ${NAMESPACE} -f ./chart/values.yaml" 
+                }
+            }
+        }
+
     }
 
     post {

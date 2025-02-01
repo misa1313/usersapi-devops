@@ -20,4 +20,5 @@ todo_list
 crash.log
 crash.*.log
 *.terraform.tfstate.lock.info
-
+*override.*
+*.tfplan 

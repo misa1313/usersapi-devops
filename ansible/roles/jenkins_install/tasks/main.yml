@@ -16,14 +16,19 @@
         repo: deb https://pkg.jenkins.io/debian-stable binary/
         state: present
 
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
     - name: Installing Jenkins
       apt:
         name: jenkins
         state: present
-        update_cache: true
+      register: pkg_installed
 
     - name: Starting and enabling Jenkins
       service:
         name: jenkins
         state: started
         enabled: true
+      when: pkg_installed.changed
