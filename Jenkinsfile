@@ -23,11 +23,11 @@ pipeline {
 
                         sh '''
                         python -m pip install --upgrade pip
-                        pip install flake8 pylint black bandit bandit[sarif] nose
+                        pip install flake8 pylint black bandit bandit[sarif] nose bandit_sarif_formatter
                         pip install -r requirements.txt
                         '''
 
-                        // sh 'black --check .'
+                        sh 'black --check .'
 
                         sh '''
                         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --ignore="F821,F822"
