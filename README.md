@@ -40,10 +40,6 @@ Go to **Manage Jenkins > System > Global properties** and configure:
 cd terraform/
 terraform init
 terraform apply -auto-approve
-
-cd terraform/eks/
-terraform init
-terraform apply -auto-approve
 ```
 This sets up the EC2 instance, EBS storage, and EKS cluster.
 

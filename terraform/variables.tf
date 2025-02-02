@@ -23,3 +23,10 @@ variable "ssh_key_file" {
   type        = string
   default     = "~/.ssh/id_rsa"
 }
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
+
